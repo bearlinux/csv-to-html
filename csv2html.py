@@ -1,6 +1,7 @@
 import pandas as pd
 import argparse
 import sys
+import re
 
 def create_google_charts_html(df, key_column, data_columns, output_file='output.html'):
     """
@@ -48,13 +49,17 @@ def create_google_charts_html(df, key_column, data_columns, output_file='output.
     # --- 3. JavaScript for Charts ---
     # Generate a drawChart function for each data column
     for i, col in enumerate(data_columns):
+        # Sanitize the column name to create a valid JavaScript function name.
+        # Replaces any character that is not a letter, number, or underscore with an underscore.
+        sanitized_col_name = re.sub(r'[^a-zA-Z0-9_]', '_', col)
+        
         chart_id = f"chart_div_{i}"
         data_array_string = str(chart_data[col])
 
         html_content += f"""
-      google.charts.setOnLoadCallback(draw_{col.replace(' ', '_')}_Chart);
+      google.charts.setOnLoadCallback(draw_{sanitized_col_name}_Chart);
 
-      function draw_{col.replace(' ', '_')}_Chart() {{
+      function draw_{sanitized_col_name}_Chart() {{
         var data = google.visualization.arrayToDataTable({data_array_string});
 
         var options = {{
@@ -111,7 +116,7 @@ def create_google_charts_html(df, key_column, data_columns, output_file='output.
 
     # --- 5. Write to File ---
     try:
-        with open(output_file, 'w') as f:
+        with open(output_file, 'w', encoding='utf-8') as f:
             f.write(html_content)
         print(f"✅ Successfully generated chart file: {output_file}")
     except IOError as e:
@@ -154,3 +159,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
