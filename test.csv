@@ -1,0 +1,13 @@
+key,ignore,val1,ignore,val2
+1,,pass,,pass
+1,,pass,,fail
+1,,pass,,fail
+1,,fail,,pass
+2,,fail,,pass
+2,,pass,,pass
+2,,pass,,fail
+3,,pass,,pass
+3,,pass,,pass
+3,,fail,,fail
+4,,pass,,fail
+4,,pass,,pass
